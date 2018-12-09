@@ -6,12 +6,11 @@ env:
 go:
   - 1.11.x
 
-before_script:
-  - go install -mod vendor github.com/golangci/golangci-lint/cmd/golangci-lint
+install:
+  -
 
-# script always runs to completion (set +e). If we have linter issues AND a
-# failing test, we want to see both. Configure golangci-lint with a
-# .golangci.yml file at the top level of your repo.
 script:
-  - golangci-lint run       # run a bunch of code checkers/linters in parallel
+  - go get -t -v ./...
+  - diff -u <(echo -n) <(gofmt -d -s .)
+  - go tool vet .
   - go test -v -race ./...  # Run all the tests with the race detector enabled
